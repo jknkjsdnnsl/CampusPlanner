@@ -1,0 +1,1590 @@
+/* ==========================================================================
+   CampusPlanner Web - Modern Student Dashboard CSS
+   ========================================================================== */
+
+:root {
+  /* 메인 브랜드 컬러 (청량한 캠퍼스 인디고 & 블루 계열) */
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --primary-light: #EEF2FF;
+  --primary-border: #C7D2FE;
+
+  /* 상태별 색상 */
+  --urgent-color: #E11D48;        /* 마감 임박 / D-Day (Rose Red) */
+  --urgent-bg: #FFE4E6;
+  --urgent-border: #FDA4AF;
+
+  --warning-color: #D97706;       /* 주의 D-1 ~ D-3 (Amber Orange) */
+  --warning-bg: #FEF3C7;
+  --warning-border: #FCD34D;
+
+  --success-color: #059669;       /* 완료 / 정상 (Emerald Green) */
+  --success-bg: #D1FAE5;
+  --success-border: #6EE7B7;
+
+  --passed-color: #64748B;        /* 마감 지남 (Slate Gray) */
+  --passed-bg: #F1F5F9;
+  --passed-border: #CBD5E1;
+
+  /* 중립색 및 배경 */
+  --bg-app: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-card-subtle: #F8FAFC;
+  --text-main: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --border-color: #E2E8F0;
+  --border-light: #F1F5F9;
+
+  /* 카드 그림자 및 라운딩 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  --shadow-urgent: 0 4px 14px 0 rgba(225, 29, 72, 0.25);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+/* 글로벌 리셋 & 폰트 */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Header (헤더)
+   ========================================================================== */
+.app-header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+.brand-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.brand-title span {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.brand-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.today-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-app);
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   Main Container
+   ========================================================================== */
+.main-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem;
+  flex: 1;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Stats Cards (상단 통계 위젯)
+   ========================================================================== */
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.stat-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-border);
+}
+
+.stat-card.urgent-highlight {
+  border-color: var(--urgent-border);
+  background: linear-gradient(to right, #FFF5F5, #FFFFFF);
+}
+
+.stat-card.urgent-highlight:hover {
+  box-shadow: var(--shadow-urgent);
+}
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bg-indigo-light { background-color: var(--primary-light); }
+.bg-rose-light { background-color: var(--urgent-bg); }
+.bg-amber-light { background-color: var(--warning-bg); }
+.bg-emerald-light { background-color: var(--success-bg); }
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.text-rose { color: var(--urgent-color); }
+.text-emerald { color: var(--success-color); }
+
+/* 학기 과제 진행률 게이지 */
+.progress-container {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1.25rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.progress-title {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.progress-percentage {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.progress-track {
+  height: 8px;
+  background-color: var(--border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4F46E5 0%, #10B981 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+/* ==========================================================================
+   2단 대시보드 레이아웃
+   ========================================================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.25rem;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.card-description {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+}
+
+.badge-accent {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   일정 추가 폼 (Schedule Form)
+   ========================================================================== */
+.schedule-form {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.125rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.375rem;
+}
+
+.form-label .required {
+  color: var(--urgent-color);
+}
+
+.input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-wrap svg {
+  position: absolute;
+  left: 0.875rem;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.form-control {
+  width: 100%;
+  height: 42px;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-icon-wrap .form-control {
+  padding-left: 2.5rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.col-half {
+  flex: 1;
+}
+
+/* D-day 실시간 미리보기 */
+.dday-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-card-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 0.825rem;
+}
+
+.preview-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 안내 박스 */
+.guide-box {
+  margin: 0 1.5rem 1.5rem 1.5rem;
+  padding: 0.875rem 1rem;
+  background-color: #F8FAFC;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+}
+
+.guide-title {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.guide-text {
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   일정 목록 영역 (Schedule List Area)
+   ========================================================================== */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.items-count-badge {
+  background-color: var(--border-light);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+}
+
+.form-control-sm {
+  height: 34px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.825rem;
+}
+
+/* 툴바 (필터 탭 + 검색창) */
+.toolbar {
+  padding: 0.875rem 1.5rem;
+  background-color: var(--bg-card-subtle);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 0.375rem;
+  background-color: var(--border-light);
+  padding: 3px;
+  border-radius: var(--radius-md);
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+}
+
+.tab-btn.active {
+  background-color: #FFFFFF;
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 200px;
+}
+
+.search-box svg {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--text-muted);
+}
+
+.search-box input {
+  width: 100%;
+  height: 34px;
+  padding: 0.25rem 2rem 0.25rem 2.2rem;
+  font-size: 0.825rem;
+  font-family: inherit;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: #FFFFFF;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.btn-clear-search {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   일정 카드 목록 (Schedule Items)
+   ========================================================================== */
+.schedule-list-wrapper {
+  padding: 1.25rem 1.5rem;
+  min-height: 380px;
+}
+
+.schedule-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* 개별 일정 아이템 */
+.schedule-item {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.875rem;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.schedule-item:hover {
+  border-color: #CBD5E1;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* 임박 일정 하이라이트 스타일 */
+.schedule-item.item-urgent {
+  border-left: 4px solid var(--urgent-color);
+  background: linear-gradient(90deg, rgba(254, 226, 226, 0.25) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.schedule-item.item-today {
+  border-left: 4px solid var(--urgent-color);
+  background: linear-gradient(90deg, rgba(254, 226, 226, 0.45) 0%, rgba(255, 255, 255, 1) 100%);
+  animation: pulse-border 2s infinite ease-in-out;
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.3); }
+  70% { box-shadow: 0 0 0 6px rgba(225, 29, 72, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(225, 29, 72, 0); }
+}
+
+/* 완료된 일정 스타일 */
+.schedule-item.item-completed,
+.schedule-item.completed {
+  opacity: 0.65;
+  background-color: #F8FAFC;
+  border-color: var(--border-color);
+}
+
+.schedule-item.item-completed .item-title,
+.schedule-item.completed .item-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* 왼쪽 체크박스 + 정보 영역 */
+.item-main {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* 커스텀 체크박스 */
+.checkbox-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkbox-wrap input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #CBD5E1;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox-wrap input[type="checkbox"]:hover {
+  border-color: var(--primary);
+}
+
+.checkbox-wrap input[type="checkbox"]:checked {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.checkbox-wrap input[type="checkbox"]:checked::after {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+/* 내용 텍스트 */
+.item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.item-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.category-tag {
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  background-color: #F1F5F9;
+  color: #475569;
+}
+
+.category-tag.cat-과제 { background-color: #EEF2FF; color: #4338CA; }
+.category-tag.cat-시험 { background-color: #FEF3C7; color: #B45309; }
+.category-tag.cat-팀플 { background-color: #F3E8FF; color: #7E22CE; }
+.category-tag.cat-강의 { background-color: #E0F2FE; color: #0369A1; }
+
+.item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-meta-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.785rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.meta-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  word-break: keep-all;
+  flex-shrink: 0;
+}
+
+.meta-memo {
+  color: var(--text-muted);
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+}
+
+/* 오른쪽 D-day 뱃지 & 액션 버튼 */
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   D-Day 뱃지 시스템
+   ========================================================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+  font-size: 0.775rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* 오늘 마감 D-Day */
+.badge-today {
+  background-color: var(--urgent-color);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
+  font-weight: 800;
+}
+
+/* D-1 ~ D-3 임박 */
+.badge-urgent {
+  background-color: var(--urgent-bg);
+  color: var(--urgent-color);
+  border: 1px solid var(--urgent-border);
+}
+
+/* D-4 ~ D-7 주의 */
+.badge-warning {
+  background-color: var(--warning-bg);
+  color: var(--warning-color);
+  border: 1px solid var(--warning-border);
+}
+
+/* 여유 일정 (D-8 이상) */
+.badge-normal {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
+
+/* 기한 지남 (D+1 등) */
+.badge-passed {
+  background-color: var(--passed-bg);
+  color: var(--passed-color);
+  border: 1px solid var(--passed-border);
+}
+
+/* 완료된 항목의 뱃지 */
+.badge-done {
+  background-color: var(--success-bg);
+  color: var(--success-color);
+  border: 1px solid var(--success-border);
+}
+
+/* 액션 버튼 (삭제) */
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-icon:hover {
+  background-color: #FEE2E2;
+  color: var(--urgent-color);
+  border-color: #FECACA;
+}
+
+/* ==========================================================================
+   Empty State (빈 상태 안내)
+   ========================================================================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.empty-illustration {
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.35rem;
+}
+
+.empty-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  max-width: 320px;
+}
+
+/* ==========================================================================
+   List Footer (하단 범례 및 일괄 정리)
+   ========================================================================== */
+.list-footer {
+  padding: 0.875rem 1.5rem;
+  background-color: var(--bg-card-subtle);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.list-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  font-size: 0.775rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dot-urgent { background-color: var(--urgent-color); }
+.dot-normal { background-color: var(--primary); }
+.dot-passed { background-color: var(--passed-color); }
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==========================================================================
+   Buttons (버튼 스타일)
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #FFFFFF;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-card-subtle);
+  border-color: #CBD5E1;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background-color: #E2E8F0;
+  color: var(--text-main);
+}
+
+.btn-ghost-danger {
+  background: transparent;
+  color: var(--urgent-color);
+  border-color: transparent;
+}
+
+.btn-ghost-danger:hover {
+  background-color: #FEE2E2;
+}
+
+/* ==========================================================================
+   Toast Notification (토스트 알림)
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  background-color: #1E293B;
+  color: #FFFFFF;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: auto;
+}
+
+.toast.toast-success { border-left: 4px solid var(--success-color); }
+.toast.toast-error { border-left: 4px solid var(--urgent-color); }
+.toast.toast-info { border-left: 4px solid var(--primary); }
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.app-footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  margin-top: auto;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ==========================================================================
+   반응형 미디어 쿼리 (Responsive Styles)
+   PC 화면에는 영향을 주지 않고 태블릿 및 모바일에 최적화된 레이아웃 제공
+   ========================================================================== */
+
+/* 태블릿 (1024px 이하) */
+@media (max-width: 1024px) {
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+/* 스마트폰 / 모바일 (640px 이하) */
+@media (max-width: 640px) {
+  /* 1. 상단 헤더 & 제목 & 날짜 영역 크기 최적화 */
+  .app-header {
+    border-bottom-width: 1px;
+  }
+
+  .header-container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.625rem 0.875rem;
+    gap: 0.5rem;
+  }
+
+  .brand {
+    gap: 0.5rem;
+  }
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+  }
+
+  .brand-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .brand-title {
+    font-size: 1.05rem;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+  }
+
+  .brand-subtitle {
+    font-size: 0.675rem;
+    word-break: keep-all;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.35rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+
+  .today-display {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.725rem;
+    gap: 0.35rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    flex-shrink: 0;
+    word-break: keep-all;
+  }
+
+  .today-display svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .header-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.725rem;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+
+  .header-actions .btn svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* 2. 전체 좌우 여백 및 컨테이너 최적화 */
+  .main-container {
+    padding: 0.875rem 0.75rem;
+  }
+
+  /* 3. 상단 대시보드 통계 카드: 모바일 2x2 컴팩트 그리드 */
+  .stats-section {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .stat-card {
+    padding: 0.625rem 0.75rem;
+    gap: 0.5rem;
+    border-radius: var(--radius-md);
+  }
+
+  .stat-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+  }
+
+  .stat-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .stat-label {
+    font-size: 0.675rem;
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+    line-height: 1.1;
+  }
+
+  /* 학기 과제 진행률 바 */
+  .progress-container {
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.875rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .progress-info {
+    font-size: 0.775rem;
+    margin-bottom: 0.35rem;
+    word-break: keep-all;
+  }
+
+  .progress-title {
+    word-break: keep-all;
+  }
+
+  .progress-track {
+    height: 6px;
+  }
+
+  /* 4. 대시보드 그리드 & 카드 공통 */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .card {
+    border-radius: var(--radius-md);
+  }
+
+  .card-header {
+    padding: 0.75rem 0.875rem;
+  }
+
+  .card-title-wrap {
+    gap: 0.5rem;
+  }
+
+  .card-title {
+    font-size: 0.975rem;
+    word-break: keep-all;
+  }
+
+  .card-description {
+    font-size: 0.725rem;
+    word-break: keep-all;
+  }
+
+  .badge-accent {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  /* 5. 일정 추가 폼 모바일 최적화 */
+  .schedule-form {
+    padding: 0.875rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.875rem;
+  }
+
+  .form-label {
+    font-size: 0.785rem;
+    margin-bottom: 0.3rem;
+    word-break: keep-all;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .form-control {
+    height: 38px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .input-icon-wrap .form-control {
+    padding-left: 2.25rem;
+  }
+
+  .input-icon-wrap svg {
+    left: 0.75rem;
+    width: 16px;
+    height: 16px;
+  }
+
+  .dday-preview-box {
+    margin-top: 0.4rem;
+    padding: 0.4rem 0.625rem;
+    font-size: 0.75rem;
+    word-break: keep-all;
+  }
+
+  .preview-label {
+    word-break: keep-all;
+    white-space: nowrap;
+  }
+
+  .btn-block {
+    height: 40px;
+    font-size: 0.875rem;
+  }
+
+  .guide-box {
+    margin: 0 0.875rem 0.875rem 0.875rem;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.725rem;
+  }
+
+  .guide-title {
+    font-size: 0.75rem;
+    word-break: keep-all;
+  }
+
+  .guide-text {
+    font-size: 0.725rem;
+    word-break: keep-all;
+    line-height: 1.45;
+  }
+
+  /* 6. 일정 목록 툴바 모바일 정렬 */
+  .list-header {
+    gap: 0.5rem;
+  }
+
+  .form-control-sm {
+    height: 30px;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .toolbar {
+    padding: 0.625rem 0.875rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .filter-tabs {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.25rem;
+    padding: 2px;
+  }
+
+  .tab-btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    word-break: keep-all;
+    flex: 1;
+    text-align: center;
+  }
+
+  .search-box {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-box input {
+    height: 34px;
+    font-size: 0.8rem;
+    padding: 0.25rem 1.75rem 0.25rem 2rem;
+  }
+
+  .search-box svg {
+    left: 0.65rem;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* 7. 일정 카드 내부 글자 & 정보 균형 배치 및 날짜 줄바꿈 방지 */
+  .schedule-list-wrapper {
+    padding: 0.75rem 0.875rem;
+    min-height: 260px;
+  }
+
+  .schedule-list {
+    gap: 0.625rem;
+  }
+
+  .schedule-item {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem 0.875rem;
+    gap: 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .item-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    width: 100%;
+  }
+
+  .checkbox-wrap {
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .checkbox-wrap input[type="checkbox"] {
+    width: 19px;
+    height: 19px;
+    border-radius: 5px;
+  }
+
+  .item-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .item-header-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    word-break: keep-all;
+  }
+
+  .category-tag {
+    font-size: 0.675rem;
+    padding: 0.1rem 0.375rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .item-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.35;
+    white-space: normal;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .item-meta-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.725rem;
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+    word-break: keep-all;
+    margin-top: 0.15rem;
+  }
+
+  /* 마감일 날짜(2026-11-29) 중간 줄바꿈 절대 방지 */
+  .meta-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    flex-shrink: 0;
+    font-size: 0.725rem;
+  }
+
+  .meta-date svg {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+  }
+
+  .meta-memo {
+    font-size: 0.725rem;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: keep-all;
+  }
+
+  /* 일정 카드 하단 액션 영역 (D-day 뱃지 + 삭제 버튼) */
+  .item-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 0.375rem;
+    border-top: 1px dashed var(--border-color);
+    margin-top: 0.15rem;
+  }
+
+  .item-actions .badge {
+    font-size: 0.725rem;
+    padding: 0.2rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  .item-actions .btn-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+  }
+
+  .item-actions .btn-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* 8. 하단 범례: 자연스러운 가로 배치 및 글자 분리 방지 */
+  .list-footer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.625rem 0.875rem;
+    gap: 0.625rem;
+  }
+
+  .list-legend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.35rem 0.65rem;
+    width: 100%;
+    font-size: 0.725rem;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    word-break: keep-all;
+    font-size: 0.725rem;
+  }
+
+  .legend-dot {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+  }
+
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  .footer-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.725rem;
+    height: 28px;
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+
+  /* 빈 상태 안내 */
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .empty-title {
+    font-size: 0.95rem;
+    word-break: keep-all;
+  }
+
+  .empty-description {
+    font-size: 0.775rem;
+    word-break: keep-all;
+  }
+
+  /* 토스트 알림 */
+  .toast-container {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    align-items: center;
+  }
+
+  .toast {
+    font-size: 0.775rem;
+    padding: 0.6rem 0.875rem;
+    width: 100%;
+    justify-content: center;
+    word-break: keep-all;
+  }
+
+  .app-footer {
+    padding: 1rem 0.875rem;
+    font-size: 0.7rem;
+    word-break: keep-all;
+  }
+}
+
+/* 초소형 스마트폰 (360px 이하) 미세 조정 */
+@media (max-width: 360px) {
+  .header-actions {
+    flex-wrap: wrap;
+  }
+
+  .stats-section {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-btn {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.7rem;
+  }
+}

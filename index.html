@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusPlanner Web - 대학생 일정 및 과제 관리</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 최상단 헤더 네비게이션 -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">CampusPlanner <span>Web</span></h1>
+          <p class="brand-subtitle">대학생 스마트 일정 & 과제 대시보드</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="today-display" id="todayDisplay">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span id="currentDateText">2026-11-15</span>
+        </div>
+        
+        <!-- C++ 연동 / 백업 기능 버튼들 -->
+        <button id="btnExportTxt" class="btn btn-secondary btn-sm" title="기존 C++ 프로그램과 호환되는 schedule.txt 파일로 내보내기">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>TXT 저장 (C++ 호환)</span>
+        </button>
+
+        <label for="fileInputTxt" class="btn btn-secondary btn-sm" title="기존 schedule.txt 파일 불러오기">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <span>TXT 불러오기</span>
+          <input type="file" id="fileInputTxt" accept=".txt" style="display:none;">
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="main-container">
+    <!-- 대시보드 통계 카드 섹션 -->
+    <section class="stats-section">
+      <div class="stat-card" data-filter="all" id="cardTotal">
+        <div class="stat-icon bg-indigo-light">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">전체 등록 일정</span>
+          <span class="stat-value" id="statTotal">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card urgent-highlight" data-filter="urgent" id="cardUrgent">
+        <div class="stat-icon bg-rose-light">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E11D48" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">마감 임박 (D-3 이내)</span>
+          <span class="stat-value text-rose" id="statUrgent">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card" data-filter="active" id="cardActive">
+        <div class="stat-icon bg-amber-light">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">진행 중인 과제</span>
+          <span class="stat-value" id="statActive">0</span>
+        </div>
+      </div>
+
+      <div class="stat-card" data-filter="completed" id="cardCompleted">
+        <div class="stat-icon bg-emerald-light">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">완료한 과제</span>
+          <span class="stat-value text-emerald" id="statCompleted">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 진행률 게이지 바 -->
+    <div class="progress-container">
+      <div class="progress-info">
+        <span class="progress-title">학기 과제 달성률</span>
+        <span class="progress-percentage" id="progressPercentage">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- 2단 메인 레이아웃: 등록 폼 + 일정 목록 -->
+    <div class="dashboard-grid">
+      <!-- 좌측: 일정 추가 카드 (C++ addSchedule 대응) -->
+      <section class="card form-card">
+        <div class="card-header">
+          <div class="card-title-wrap">
+            <span class="badge badge-accent">기능 1</span>
+            <h2 class="card-title">새로운 일정 추가</h2>
+          </div>
+          <p class="card-description">과제, 시험, 조모임 등 대학 생활 일정을 등록하세요.</p>
+        </div>
+
+        <form id="scheduleForm" class="schedule-form" autocomplete="off">
+          <!-- 제목 입력: 표준 ID title 및 기존 inputTitle 둘 다 지원 -->
+          <div class="form-group">
+            <label for="title" class="form-label">
+              일정 / 과제 제목 <span class="required">*</span>
+            </label>
+            <div class="input-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              <input 
+                type="text" 
+                id="title" 
+                name="title"
+                data-id="inputTitle"
+                class="form-control" 
+                placeholder="예: 알고리즘 과제 3 제출, 객체지향 텀프로젝트" 
+                required
+                maxlength="50"
+              >
+            </div>
+          </div>
+
+          <!-- 마감 날짜 입력: 표준 ID date 및 기존 inputDate 둘 다 지원 -->
+          <div class="form-group">
+            <label for="date" class="form-label">
+              마감 날짜 (Date) <span class="required">*</span>
+            </label>
+            <div class="input-icon-wrap">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <input 
+                type="date" 
+                id="date" 
+                name="date"
+                data-id="inputDate"
+                class="form-control" 
+                required
+              >
+            </div>
+            <!-- 실시간 D-day 계산 미리보기 (dday / ddayPreviewBadge 둘 다 지원) -->
+            <div class="dday-preview-box" id="ddayPreviewBox">
+              <span class="preview-label">D-day 자동 계산:</span>
+              <span class="badge badge-normal" id="dday" data-id="ddayPreviewBadge">날짜를 선택하세요</span>
+            </div>
+          </div>
+
+          <!-- 카테고리 분류 & 메모 -->
+          <div class="form-row">
+            <div class="form-group col-half">
+              <label for="selectCategory" class="form-label">카테고리</label>
+              <select id="selectCategory" name="category" class="form-control">
+                <option value="과제">📝 과제 / 레포트</option>
+                <option value="시험">📚 중간/기말 시험</option>
+                <option value="팀플">👥 팀 프로젝트 / 발표</option>
+                <option value="강의">💻 온라인 강의 / 퀴즈</option>
+                <option value="기타">📌 기타 개인 일정</option>
+              </select>
+            </div>
+
+            <div class="form-group col-half">
+              <label for="inputMemo" class="form-label">비고 / 장소 / 메모</label>
+              <input 
+                type="text" 
+                id="inputMemo" 
+                name="memo"
+                class="form-control" 
+                placeholder="예: LMS 업로드, 공학관 301호"
+                maxlength="40"
+              >
+            </div>
+          </div>
+
+          <!-- 일정 추가 버튼: 표준 ID addButton 및 btnAddSchedule, add-btn 클래스 모두 지원 -->
+          <button type="submit" class="btn btn-primary btn-block add-btn" id="addButton" data-id="btnAddSchedule">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <span>일정 추가하기</span>
+          </button>
+        </form>
+
+        <!-- C++ 연동 안내 가이드 -->
+        <div class="guide-box">
+          <div class="guide-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            <span>스마트 자동 보존 & C++ 호환</span>
+          </div>
+          <p class="guide-text">
+            등록한 모든 일정은 <strong>브라우저 저장소(localStorage)</strong>에 자동 저장되어 새로고침해도 유지됩니다. 상단의 <strong>[TXT 저장]</strong> 버튼을 누르면 기존 C++ 콘솔 프로그램 포맷(<code>schedule.txt</code>)으로 파일 다운로드가 가능합니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 우측: 일정 목록 섹션 (C++ showSchedules 대응) -->
+      <section class="card list-card">
+        <div class="card-header list-header">
+          <div class="card-title-wrap">
+            <span class="badge badge-accent">기능 2</span>
+            <h2 class="card-title">전체 일정 목록</h2>
+            <span class="items-count-badge" id="visibleCountBadge">0개</span>
+          </div>
+
+          <!-- 정렬 컨트롤 -->
+          <div class="sort-wrap">
+            <label for="selectSort" class="sr-only">정렬 기준</label>
+            <select id="selectSort" class="form-control form-control-sm">
+              <option value="dday-asc">마감 빠른 순 (D-day 오름차순)</option>
+              <option value="dday-desc">마감 늦은 순</option>
+              <option value="created-desc">최신 등록순</option>
+              <option value="title-asc">제목 가나다순</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 툴바: 필터 탭 & 검색창 -->
+        <div class="toolbar">
+          <div class="filter-tabs" id="filterTabs">
+            <button class="tab-btn active" data-filter="all">전체</button>
+            <button class="tab-btn" data-filter="urgent">🔥 마감 임박</button>
+            <button class="tab-btn" data-filter="active">진행 중</button>
+            <button class="tab-btn" data-filter="completed">✅ 완료됨</button>
+          </div>
+
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="일정 검색..." aria-label="일정 검색">
+            <button id="btnClearSearch" class="btn-clear-search" style="display:none;" title="검색어 지우기">&times;</button>
+          </div>
+        </div>
+
+        <!-- 일정 리스트 영역: scheduleList 및 schedule-list 모두 지원 -->
+        <div class="schedule-list-wrapper">
+          <ul class="schedule-list" id="scheduleList" data-testid="schedule-list">
+            <!-- 자바스크립트로 동적 렌더링 -->
+          </ul>
+
+          <!-- 일정이 없을 때 표시할 Empty State -->
+          <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-illustration">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="1.5">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <path d="M9 16l2 2 4-4"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">표시할 일정이 없습니다</h3>
+            <p class="empty-description" id="emptyDescription">좌측 폼에서 새로운 과제나 일정을 등록해 보세요!</p>
+          </div>
+        </div>
+
+        <!-- 하단 목록 요약 및 일괄 작업 -->
+        <div class="list-footer">
+          <div class="list-legend">
+            <span class="legend-item"><span class="legend-dot dot-urgent"></span> D-Day ~ D-3 (마감 임박)</span>
+            <span class="legend-item"><span class="legend-dot dot-normal"></span> 여유 일정</span>
+            <span class="legend-item"><span class="legend-dot dot-passed"></span> 지난 일정</span>
+          </div>
+          <div class="footer-actions">
+            <button id="btnClearCompleted" class="btn btn-ghost btn-sm" title="완료 처리된 일정만 모두 삭제">
+              완료 항목 정리
+            </button>
+            <button id="btnResetAll" class="btn btn-ghost-danger btn-sm" title="모든 일정을 초기화하고 샘플 복원">
+              전체 초기화
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- 토스트 알림창 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- 푸터 -->
+  <footer class="app-footer">
+    <p>© 2026 CampusPlanner Web - 대학생 일정 및 과제 관리 시스템 (C++ main.cpp 기반 웹 마이그레이션 프로젝트)</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
